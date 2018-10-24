@@ -4,6 +4,10 @@ Part-of-Speech Tagging using a LSTM Deep Learning Neural Network
 
 ## Usage
 
+```bash
+python3 posTagging.py -h
+```
+
 ```text
 usage: posTagging.py [-h] train validation test
 
