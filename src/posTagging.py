@@ -8,15 +8,12 @@ args = argParseConfig.parser()
 
 if bool(args.data_preproc):
     data = inputReader.InputReader(args.train, args.validation, args.test)
-
     print(data.train.head())
 
     dataPreprocessor.sentence_encoder(data)
-
     print(data.train.head())
 
     dataPreprocessor.tag_encoder(data)
-
     print(data.train.head())
 
     data.train.to_csv('tmp/train.csv')
