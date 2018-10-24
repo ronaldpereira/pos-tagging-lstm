@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 class InputReader:
     def __init__(self, trainPath, validationPath, testPath):
         self.train = inputPreprocessor(trainPath)

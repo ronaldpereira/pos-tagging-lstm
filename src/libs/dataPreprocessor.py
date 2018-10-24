@@ -1,15 +1,17 @@
+from multiprocessing import Manager, Process
+
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
-from multiprocessing import Process
 
-def label_encoder(le, data, df, col_name, info):
+
+def label_encoder(le, data, info, return_dict):
     dataEncoded = []
     for index, value in enumerate(data):
         if index % 100 == 0 or index == len(data)-1:
             print('%s: %d/%d -> %.1f%%' %(info, index, len(data)-1, index*100/(len(data)-1)))
         dataEncoded.append(le.transform(value))
 
-    df[col_name] = dataEncoded
+    return_dict[info] = dataEncoded
 
 def sentence_encoder(data):
     print('Sentence encoder')
@@ -27,19 +29,25 @@ def sentence_encoder(data):
     le = LabelEncoder()
     le.fit(vocabulary)
 
-    trainProcess = Process(target=label_encoder, args=(le, data.train['sentence'].values, data.train, 'enc_sentence', 'train'))
+    manager = Manager()
+    return_dict = manager.dict()
+
+    trainProcess = Process(target=label_encoder, args=(le, data.train['sentence'].values, 'train', return_dict))
     trainProcess.start()
 
-    validationProcess = Process(target=label_encoder, args=(le, data.validation['sentence'].values, data.validation, 'enc_sentence', 'validation'))
+    validationProcess = Process(target=label_encoder, args=(le, data.validation['sentence'].values, 'validation', return_dict))
     validationProcess.start()
 
-    testProcess = Process(target=label_encoder, args=(le, data.test['sentence'].values, data.test, 'enc_sentence', 'test'))
+    testProcess = Process(target=label_encoder, args=(le, data.test['sentence'].values, 'test', return_dict))
     testProcess.start()
 
     trainProcess.join()
     validationProcess.join()
     testProcess.join()
 
+    data.train['enc_sentence'] = return_dict['train']
+    data.validation['enc_sentence'] = return_dict['validation']
+    data.test['enc_sentence'] = return_dict['test']
 
 def tag_encoder(data):
     print('Tags encoder')
@@ -57,15 +65,22 @@ def tag_encoder(data):
     le = LabelEncoder()
     le.fit(allTags)
 
-    trainProcess = Process(target=label_encoder, args=(le, data.train['tags'].values, data.train, 'enc_tags', 'train'))
+    manager = Manager()
+    return_dict = manager.dict()
+
+    trainProcess = Process(target=label_encoder, args=(le, data.train['tags'].values, 'train', return_dict))
     trainProcess.start()
 
-    validationProcess = Process(target=label_encoder, args=(le, data.validation['tags'].values, data.validation, 'enc_tags', 'validation'))
+    validationProcess = Process(target=label_encoder, args=(le, data.validation['tags'].values, 'validation', return_dict))
     validationProcess.start()
 
-    testProcess = Process(target=label_encoder, args=(le, data.test['tags'].values, data.test, 'enc_tags', 'test'))
+    testProcess = Process(target=label_encoder, args=(le, data.test['tags'].values, 'test', return_dict))
     testProcess.start()
 
     trainProcess.join()
     validationProcess.join()
     testProcess.join()
+
+    data.train['enc_tags'] = return_dict['train']
+    data.validation['enc_tags'] = return_dict['validation']
+    data.test['enc_tags'] = return_dict['test']
