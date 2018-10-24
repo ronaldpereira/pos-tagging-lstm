@@ -9,7 +9,7 @@ def parser():
     parser.add_argument('test', type=str, help='Test input file path')
 
     # Optional arguments
-    parser.add_argument('-d', '--data_preproc', type=int, default=False, help='Do preprocessing of corpus? (Default: False)')
+    parser.add_argument('-d', '--data_preproc', type=int, default=1, help='Do preprocessing of corpus? (0 = False / 1 = True) (Default: 1)')
 
     args = parser.parse_args()
 
