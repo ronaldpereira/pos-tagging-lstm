@@ -8,6 +8,6 @@ data = inputReader.InputReader(args.train, args.validation, args.test)
 
 print(data.train.head())
 
-dataPreprocessor.label_encoder(data, data.train['tag'], data.validation['tag'], data.test['tag'])
+dataPreprocessor.label_encoder(data)
 
 print(data.train.head())
