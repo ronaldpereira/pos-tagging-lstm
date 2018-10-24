@@ -1,7 +1,7 @@
 import argparse
 
 def parser():
-    parser = argparse.ArgumentParser(description='Part-of-Speech Tagging using a LSTM Neural Network.')
+    parser = argparse.ArgumentParser(description='Part-of-Speech Tagging using a LSTM Deep Learning Neural Network.')
 
     # Required arguments
     parser.add_argument('train', type=str, help='Train input file path')
