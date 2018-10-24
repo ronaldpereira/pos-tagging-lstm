@@ -11,10 +11,14 @@ def inputPreprocessor(filePath):
     with open(filePath, "r") as inputFile:
         words_tags = []
         for line in inputFile:
+            words_line = []
+            tags_line = []
             for word_tag in line.split():
                 word, tag = word_tag.split('_')
-                words_tags.append((word, tag))
+                words_line.append(word)
+                tags_line.append(tag)
+            words_tags.append([words_line, tags_line])
 
-    df = pd.DataFrame({'word': list(map(lambda word_tag: word_tag[0], words_tags)), 'tag': list(map(lambda word_tag: word_tag[1], words_tags))})
+    df = pd.DataFrame({'sentence': list(map(lambda word_tag: word_tag[0], words_tags)), 'tags': list(map(lambda word_tag: word_tag[1], words_tags))})
 
     return df
