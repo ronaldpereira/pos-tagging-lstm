@@ -1,7 +1,19 @@
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
+from multiprocessing import Process
+
+def label_encoder(le, data, df, col_name, info):
+    dataEncoded = []
+    for index, value in enumerate(data):
+        if index % 100 == 0 or index == len(data)-1:
+            print('%s: %d/%d -> %.1f%%' %(info, index, len(data)-1, index*100/(len(data)-1)))
+        dataEncoded.append(le.transform(value))
+
+    df[col_name] = dataEncoded
 
 def sentence_encoder(data):
+    print('Sentence encoder')
+
     sentences = []
     sentences.extend(data.train['sentence'].values)
     sentences.extend(data.validation['sentence'].values)
@@ -15,11 +27,23 @@ def sentence_encoder(data):
     le = LabelEncoder()
     le.fit(vocabulary)
 
-    data.train['enc_sentence'] = list(map(lambda sentence: le.transform(sentence), data.train['sentence'].values))
-    data.validation['enc_sentence'] = list(map(lambda sentence: le.transform(sentence), data.validation['sentence'].values))
-    data.test['enc_sentence'] = list(map(lambda sentence: le.transform(sentence), data.test['sentence'].values))
+    trainProcess = Process(target=label_encoder, args=(le, data.train['sentence'].values, data.train, 'enc_sentence', 'train'))
+    trainProcess.start()
+
+    validationProcess = Process(target=label_encoder, args=(le, data.validation['sentence'].values, data.validation, 'enc_sentence', 'validation'))
+    validationProcess.start()
+
+    testProcess = Process(target=label_encoder, args=(le, data.test['sentence'].values, data.test, 'enc_sentence', 'test'))
+    testProcess.start()
+
+    trainProcess.join()
+    validationProcess.join()
+    testProcess.join()
+
 
 def tag_encoder(data):
+    print('Tags encoder')
+
     tagLine = []
     tagLine.extend(data.train['tags'].values)
     tagLine.extend(data.validation['tags'].values)
@@ -33,6 +57,15 @@ def tag_encoder(data):
     le = LabelEncoder()
     le.fit(allTags)
 
-    data.train['enc_tags'] = list(map(lambda tag: le.transform(tag), data.train['tags'].values))
-    data.validation['enc_tags'] = list(map(lambda tag: le.transform(tag), data.validation['tags'].values))
-    data.test['enc_tags'] = list(map(lambda tag: le.transform(tag), data.test['tags'].values))
+    trainProcess = Process(target=label_encoder, args=(le, data.train['tags'].values, data.train, 'enc_tags', 'train'))
+    trainProcess.start()
+
+    validationProcess = Process(target=label_encoder, args=(le, data.validation['tags'].values, data.validation, 'enc_tags', 'validation'))
+    validationProcess.start()
+
+    testProcess = Process(target=label_encoder, args=(le, data.test['tags'].values, data.test, 'enc_tags', 'test'))
+    testProcess.start()
+
+    trainProcess.join()
+    validationProcess.join()
+    testProcess.join()
