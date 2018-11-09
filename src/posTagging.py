@@ -7,17 +7,6 @@ import libs.dataPreprocessor as dataPreprocessor
 import libs.inputReader as inputReader
 import libs.lstm as lstm
 
-def logits_to_tokens(sequences, index):
-    token_sequences = []
-    for categorical_sequence in sequences:
-        token_sequence = []
-        for categorical in categorical_sequence:
-            token_sequence.append(index[np.argmax(categorical)])
- 
-        token_sequences.append(token_sequence)
- 
-    return token_sequences
-
 args = argParseConfig.parser()
 
 data = inputReader.InputReader(args.train, args.validation, args.test)
@@ -39,7 +28,7 @@ y_test = np.array(y_test.values.tolist())
 model.train(x_train, y_train)
 
 predictions = model.model.predict(x_test)
-predictions_tokens = logits_to_tokens(predictions, {i: t for t, i in data.tag2index.items()})
+predictions_tokens = dataPreprocessor.encoded_to_tokens(predictions, {i: t for t, i in data.tag2index.items()})
 
 with open('output/predicted.txt', 'w') as predictedFile, open('output/real.txt', 'w') as realFile:
     predictedFile.write(predictions_tokens)

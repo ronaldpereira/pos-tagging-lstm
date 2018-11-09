@@ -15,6 +15,17 @@ def label_encoder(indexDict, data, info, return_dict):
 
     return_dict[info] = dataEncoded
 
+def encoded_to_tokens(sequences, index):
+    token_sequences = []
+    for categorical_sequence in sequences:
+        token_sequence = []
+        for categorical in categorical_sequence:
+            token_sequence.append(index[np.argmax(categorical)])
+ 
+        token_sequences.append(token_sequence)
+ 
+    return token_sequences
+
 def one_hot_encode_tags(data, categoryLength):
     category_sequences = []
     for seq in data:
