@@ -6,6 +6,8 @@ class InputReader:
         self.train = inputPreprocessor(trainPath)
         self.validation = inputPreprocessor(validationPath)
         self.test = inputPreprocessor(testPath)
+        self.word2index = {}
+        self.tag2index = {}
 
 
 def inputPreprocessor(filePath):
