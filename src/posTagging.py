@@ -39,4 +39,8 @@ y_test = np.array(y_test.values.tolist())
 model.train(x_train, y_train)
 
 predictions = model.model.predict(x_test)
-print(logits_to_tokens(predictions, {i: t for t, i in data.tag2index.items()}))
+predictions_tokens = logits_to_tokens(predictions, {i: t for t, i in data.tag2index.items()})
+
+with open('output/predicted.txt', 'w') as predictedFile, open('output/real.txt', 'w') as realFile:
+    predictedFile.write(predictions_tokens)
+    realFile.write(y_test)
