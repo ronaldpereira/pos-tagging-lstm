@@ -24,6 +24,4 @@ def inputPreprocessor(filePath):
 
     df = pd.DataFrame({'sentence': list(map(lambda word_tag: word_tag[0], words_tags)), 'tags': list(map(lambda word_tag: word_tag[1], words_tags))})
 
-    print(df.head())
-
     return df
