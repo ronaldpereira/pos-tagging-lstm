@@ -29,7 +29,8 @@ model.train(x_train, y_train)
 
 predictions = model.model.predict(x_test)
 predictions_tokens = dataPreprocessor.encoded_to_tokens(predictions, {i: t for t, i in data.tag2index.items()})
+y_test_tokens = dataPreprocessor.encoded_to_tokens(y_test, {i: t for t, i in data.tag2index.items()})
 
 with open('output/predicted.txt', 'w') as predictedFile, open('output/real.txt', 'w') as realFile:
     predictedFile.write(str(predictions_tokens))
-    realFile.write(str(y_test))
+    realFile.write(str(y_test_tokens))
