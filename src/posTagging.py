@@ -31,5 +31,5 @@ predictions = model.model.predict(x_test)
 predictions_tokens = dataPreprocessor.encoded_to_tokens(predictions, {i: t for t, i in data.tag2index.items()})
 
 with open('output/predicted.txt', 'w') as predictedFile, open('output/real.txt', 'w') as realFile:
-    predictedFile.write(predictions_tokens)
-    realFile.write(y_test)
+    predictedFile.write(str(predictions_tokens))
+    realFile.write(str(y_test))
