@@ -24,4 +24,6 @@ with open('output/predicted.txt', 'r') as predFile, open('output/real.txt', 'r')
                 resultsDict[realTag]['total'] = 1
                 resultsDict[realTag]['accuracy'] = resultsDict[realTag]['correct'] / resultsDict[realTag]['total']
 
-    print(resultsDict)
+    outFile = open("resultsDict.txt","w+")
+    outFile.write("%s", resultsDict)
+    outFile.close()
