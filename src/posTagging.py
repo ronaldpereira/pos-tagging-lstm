@@ -1,22 +1,19 @@
-import pandas as pd
-from sklearn.model_selection import train_test_split
 import numpy as np
+import pandas as pd
 
 import libs.argParseConfig as argParseConfig
 import libs.dataPreprocessor as dataPreprocessor
 import libs.inputReader as inputReader
 import libs.lstm as lstm
 
+from sklearn.model_selection import train_test_split
+
 args = argParseConfig.parser()
-
 data = inputReader.InputReader(args.train, args.validation, args.test)
-
 dataPreprocessor.sentence_encoder(data)
-
 dataPreprocessor.tag_encoder(data)
 
 print('*** LSTM POS-Tagging Model ***')
-
 model = lstm.Model(data)
 
 x_train, x_test, y_train, y_test = train_test_split(data.train['enc_sentence'], data.train['one_hot_enc_tags'], test_size=0.2)
