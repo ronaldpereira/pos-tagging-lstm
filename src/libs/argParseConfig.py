@@ -9,6 +9,4 @@ def parser():
     parser.add_argument('validation', type=str, help='Validation input file path')
     parser.add_argument('test', type=str, help='Test input file path')
 
-    args = parser.parse_args()
-
-    return args
+    return parser.parse_args()
